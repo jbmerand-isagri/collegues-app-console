@@ -1,0 +1,21 @@
+{
+  "name": "collegues-app-console",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbmerand/collegues-app-console.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jbmerand/collegues-app-console/issues"
+  },
+  "homepage": "https://github.com/jbmerand/collegues-app-console#readme"
+}
