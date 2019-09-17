@@ -35,10 +35,12 @@ function afficherMenu(rl) {
         console.log(`Vous avez saisi : ${saisie}`);
         if (saisie && saisie === '1') {
             rechercherCollegueParNom(rl);
-        }
-        if (saisie && saisie === '99') {
+        } else if (saisie && saisie === '99') {
             rl.close();
             console.log('Aurevoir');
+        } else {
+            console.log("Choix invalide, merci de recommencer :");
+            afficherMenu(rl);
         }
     });
 }
@@ -54,16 +56,17 @@ function rechercherCollegueParNom(rl) {
                         matricule,
                         function (callbackFn) {
                             console.log(callbackFn);
+                            afficherMenu(rl);
                         },
                         function (errorFn) {
                             console.log(errorFn);
+                            afficherMenu(rl);
                         })
                 })
-                // FIXME: régler problème ici de relance du menu.
-                afficherMenu(rl);
             },
             function (errorFn) {
                 console.log(errorFn);
+                afficherMenu(rl);
             })
     })
 }
