@@ -36,7 +36,7 @@ function getMatriculeSelonNomReq(nom, callbackFn, errorFn) {
             if (res.statusCode === 200) {
                 callbackFn(body);
             } else {
-                errorFn("Erreur dans la récupération des matricules.")
+                errorFn("Erreur dans la récupération des matricules.");
             }
 
         }
@@ -53,7 +53,7 @@ function getInfosCollegueSelonMatricule(matricule, callbackFn, errorFn) {
             if (res.statusCode === 200) {
                 callbackFn(body);
             } else {
-                errorFn("Erreur dans la récupération des informations du collègue.")
+                errorFn("Erreur dans la récupération des informations du collègue.");
             }
         }
     );
