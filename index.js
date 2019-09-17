@@ -1,3 +1,5 @@
+var presentationModule = require('./presentation.js');
+
 console.log('** Administration Collègues **');
 
-require('presentation.')
+presentationModule.startFn();

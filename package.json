@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "repository": {
@@ -17,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/jbmerand/collegues-app-console/issues"
   },
-  "homepage": "https://github.com/jbmerand/collegues-app-console#readme"
+  "homepage": "https://github.com/jbmerand/collegues-app-console#readme",
+  "dependencies": {
+    "request": "^2.88.0"
+  }
 }
