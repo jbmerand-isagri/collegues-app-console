@@ -7,6 +7,7 @@ exports.postAuthenticateReq = postAuthenticateReq;
 exports.getMatriculeSelonNomReq = getMatriculeSelonNomReq;
 exports.getInfosCollegueSelonMatricule = getInfosCollegueSelonMatricule;
 exports.getToutesInfosColleguesAPartirNom = getToutesInfosColleguesAPartirNom;
+exports.postCreerCollegueReq = postCreerCollegueReq;
 
 function postAuthenticateReq(identifiant, mdp, callbackFn) {
     console.log("passage dans postAuthenticateReq");
@@ -23,6 +24,35 @@ function postAuthenticateReq(identifiant, mdp, callbackFn) {
         function (err, res, body) {
             callbackFn(res.statusCode);
         }
+    );
+}
+
+function postCreerCollegueReq(collegue, callbackFn, errorFn) {
+    console.log("passage dans postCreerCollegueReq");
+    strCollegue = JSON.stringify(collegue);
+    console.log("collegue à créer = " + strCollegue);
+    // https://jbmerand-collegues-api.herokuapp.com/collegues
+    request('https://jbmerand-collegues-api.herokuapp.com/collegues', {
+            method: 'POST',
+            json: true,
+            body: {
+                "nom": collegue.nom,
+                "prenoms": collegue.prenoms,
+                "email": collegue.email,
+                "dateDeNaissance": collegue.dateDeNaissance,
+                "photoUrl": collegue.photoUrl,
+                "identifiant": collegue.identifiant,
+                "motDePasse": collegue.motDePasse,
+                "role": collegue.role
+            }
+        },
+        function (err, res, body) {
+            if (res.statusCode === 201) {
+                callbackFn("OK : Collègue créé.\n");
+            } else {
+                errorFn("Echec de la création du collègue.\n" + err + (body ? body : ""));
+            }
+        },
     );
 }
 
