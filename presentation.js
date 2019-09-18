@@ -14,7 +14,7 @@ function start() {
         output: process.stdout
     });
 
-    rl.question('Quel est votre identifiant (u1) ?', function (identifiant) {
+    rl.question('Quel est votre identifiant(u1) ?', function (identifiant) {
         rl.question('Quel est votre mot de passe (pass1) ?', function (mdp) {
             serviceModule.postAuthenticateReq(identifiant, mdp, function (statusCode) {
                 if (statusCode === 200) {
@@ -47,26 +47,42 @@ function afficherMenu(rl) {
 
 function rechercherCollegueParNom(rl) {
     rl.question('Quel est le nom du collègue que vous recherchez ?', function (nomCollegue) {
-        serviceModule.getMatriculeSelonNomReq(
+
+        // En utilisant deux fonctions de service :
+
+        // serviceModule.getMatriculeSelonNomReq(
+        //     nomCollegue,
+        //     function (callbackFn) {
+        //         console.log(callbackFn);
+        //         callbackFn.forEach(function (matricule) {
+        //             serviceModule.getInfosCollegueSelonMatricule(
+        //                 matricule,
+        //                 function (callbackFn) {
+        //                     console.log(callbackFn);
+        //                     afficherMenu(rl);
+        //                 },
+        //                 function (errorFn) {
+        //                     console.log(errorFn);
+        //                     afficherMenu(rl);
+        //                 })
+        //         })
+        //     },
+        //     function (errorFn) {
+        //         console.log(errorFn);
+        //         afficherMenu(rl);
+        //     })
+
+        // En utilisant une seule fonction de service :
+        serviceModule.getToutesInfosColleguesAPartirNom(
             nomCollegue,
             function (callbackFn) {
                 console.log(callbackFn);
-                callbackFn.forEach(function (matricule) {
-                    serviceModule.getInfosCollegueSelonMatricule(
-                        matricule,
-                        function (callbackFn) {
-                            console.log(callbackFn);
-                            afficherMenu(rl);
-                        },
-                        function (errorFn) {
-                            console.log(errorFn);
-                            afficherMenu(rl);
-                        })
-                })
+                afficherMenu(rl);
             },
             function (errorFn) {
                 console.log(errorFn);
                 afficherMenu(rl);
-            })
+            }
+        )
     })
 }
