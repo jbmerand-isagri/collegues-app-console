@@ -8,11 +8,12 @@ exports.getMatriculeSelonNomReq = getMatriculeSelonNomReq;
 exports.getInfosCollegueSelonMatricule = getInfosCollegueSelonMatricule;
 exports.getToutesInfosColleguesAPartirNom = getToutesInfosColleguesAPartirNom;
 exports.postCreerCollegueReq = postCreerCollegueReq;
+exports.patchModifierEmailCollegueReq = patchModifierEmailCollegueReq;
 
 function postAuthenticateReq(identifiant, mdp, callbackFn) {
-    console.log("passage dans postAuthenticateReq");
-    console.log(`identifiant = ${identifiant}, mdp = ${mdp}`);
-    console.log(`"identifiant": "${identifiant.toString()}"`);
+    // console.log("passage dans postAuthenticateReq");
+    // console.log(`identifiant = ${identifiant}, mdp = ${mdp}`);
+    // console.log(`"identifiant": "${identifiant.toString()}"`);
     request('https://jbmerand-collegues-api.herokuapp.com/auth', {
             method: 'POST',
             json: true,
@@ -28,7 +29,7 @@ function postAuthenticateReq(identifiant, mdp, callbackFn) {
 }
 
 function postCreerCollegueReq(collegue, callbackFn, errorFn) {
-    console.log("passage dans postCreerCollegueReq");
+    // console.log("passage dans postCreerCollegueReq");
     strCollegue = JSON.stringify(collegue);
     console.log("collegue à créer = " + strCollegue);
     // https://jbmerand-collegues-api.herokuapp.com/collegues
@@ -56,8 +57,27 @@ function postCreerCollegueReq(collegue, callbackFn, errorFn) {
     );
 }
 
+function patchModifierEmailCollegueReq(matricule, email, callbackFn, errorFn) {
+    // https://jbmerand-collegues-api.herokuapp.com/collegues/{matricule}
+    request('https://jbmerand-collegues-api.herokuapp.com/collegues/' + matricule, {
+            method: 'PATCH',
+            json: true,
+            body: {
+                "email": email
+            }
+        },
+        function (err, res, body) {
+            if (res.statusCode === 200) {
+                callbackFn("OK : email modifié.")
+            } else {
+                errorFn("Erreur : email non modifié\n" + body)
+            }
+        }
+    );
+}
+
 function getMatriculeSelonNomReq(nom, callbackFn, errorFn) {
-    console.log("passage dans getMatriculeSelonNomReq", nom);
+    // console.log("passage dans getMatriculeSelonNomReq", nom);
     // https://jbmerand-collegues-api.herokuapp.com/collegues?nom=durand
     request("https://jbmerand-collegues-api.herokuapp.com/collegues?nom=" + nom, {
             method: 'GET',
@@ -69,7 +89,6 @@ function getMatriculeSelonNomReq(nom, callbackFn, errorFn) {
             } else {
                 errorFn("Erreur dans la récupération des matricules.");
             }
-
         }
     );
 }
