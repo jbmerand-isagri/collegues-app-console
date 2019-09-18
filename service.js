@@ -9,6 +9,7 @@ exports.getInfosCollegueSelonMatricule = getInfosCollegueSelonMatricule;
 exports.getToutesInfosColleguesAPartirNom = getToutesInfosColleguesAPartirNom;
 exports.postCreerCollegueReq = postCreerCollegueReq;
 exports.patchModifierEmailCollegueReq = patchModifierEmailCollegueReq;
+exports.patchModifierPhotoUrlCollegueReq = patchModifierPhotoUrlCollegueReq;
 
 function postAuthenticateReq(identifiant, mdp, callbackFn) {
     // console.log("passage dans postAuthenticateReq");
@@ -71,6 +72,25 @@ function patchModifierEmailCollegueReq(matricule, email, callbackFn, errorFn) {
                 callbackFn("OK : email modifié.")
             } else {
                 errorFn("Erreur : email non modifié\n" + body)
+            }
+        }
+    );
+}
+
+function patchModifierPhotoUrlCollegueReq(matricule, photoUrl, callbackFn, errorFn) {
+    // https://jbmerand-collegues-api.herokuapp.com/collegues/{matricule}
+    request('https://jbmerand-collegues-api.herokuapp.com/collegues/' + matricule, {
+            method: 'PATCH',
+            json: true,
+            body: {
+                "photoUrl": photoUrl
+            }
+        },
+        function (err, res, body) {
+            if (res.statusCode === 200) {
+                callbackFn("OK : url de la photo modifié.")
+            } else {
+                errorFn("Erreur : url non modifié\n" + body)
             }
         }
     );

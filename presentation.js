@@ -31,7 +31,7 @@ function start() {
 }
 
 function afficherMenu(rl) {
-    console.log("1. Rechercher un collègue par nom\n2. Créer un collègue\n3. Modifier email d'un collègue\n99.Sortir");
+    console.log("1. Rechercher un collègue par nom\n2. Créer un collègue\n3. Modifier email d'un collègue\n4. Modifier url de photo d'un collègue\n99.Sortir");
     rl.question('Quel est votre choix ? ', function (saisie) {
         console.log(`Vous avez saisi : ${saisie}`);
         if (saisie && saisie === '1') {
@@ -40,6 +40,8 @@ function afficherMenu(rl) {
             creerCollegue(rl);
         } else if (saisie && saisie === '3') {
             modifierEmailCollegue(rl);
+        } else if (saisie && saisie === '4') {
+            modifierPhotoUrlCollegue(rl);
         } else if (saisie && saisie === '99') {
             rl.close();
             console.log('Aurevoir');
@@ -137,6 +139,26 @@ function modifierEmailCollegue(rl) {
             serviceModule.patchModifierEmailCollegueReq(
                 matricule,
                 email,
+                function (callbackFn) {
+                    console.log(callbackFn);
+                    afficherMenu(rl);
+                },
+                function (errorFn) {
+                    console.log(errorFn);
+                    afficherMenu(rl);
+                }
+            )
+        })
+    })
+}
+
+function modifierPhotoUrlCollegue(rl) {
+    console.log(">> Modifier url de la photo d'un collègue <<")
+    rl.question('Matricule du collègue ? ', function (matricule) {
+        rl.question('Nouvel url de la photo ? ', function (photoUrl) {
+            serviceModule.patchModifierPhotoUrlCollegueReq(
+                matricule,
+                photoUrl,
                 function (callbackFn) {
                     console.log(callbackFn);
                     afficherMenu(rl);
