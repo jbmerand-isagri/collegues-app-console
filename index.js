@@ -1,5 +1,4 @@
-var presentationModule = require('./presentation.js');
+const presentationModule = require('./Presentation.js');
+const Presentation = new presentationModule.Presentation();
 
-console.log('** Administration Collègues **');
-
-presentationModule.startFn();
+Presentation.start();
