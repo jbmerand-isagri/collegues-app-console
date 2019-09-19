@@ -1,11 +1,7 @@
-// ***************************** EXPORTS/REQUIRES ************************** //
+// ***************************** REQUIRES ************************** //
 
 const readline = require('readline');
 const serviceModule = require('./service.js');
-
-module.exports = {
-    start: 'start'
-};
 
 // ***************************** FUNCTIONS ************************** //
 
@@ -20,18 +16,15 @@ const start = () => {
 
     rl.question('Quel est votre identifiant (u1) ? ', function (identifiant) {
         rl.question('Quel est votre mot de passe (pass1) ? ', function (mdp) {
-/*            serviceModule.postAuthenticateReq(identifiant, mdp, function (statusCode) {
-                if (statusCode === 200) {
-                    console.log("Authentification réussie");
+            serviceModule.postAuthenticateReq(identifiant, mdp)
+                .then(response => {
+                    console.log(`${response.statusCode} : authentification réussie.`);
                     afficherMenu(rl);
-                } else {
-                    console.log("Authentification échouée. Aurevoir");
+                })
+                .catch(err => {
+                    console.log(`${err.statusCode} : échec de l'authentification. Aurevoir.`);
                     rl.close();
-                }
-            });*/
-            serviceModule.postAuthenticateReq(identifiant, mdp).then((value) => {
-                console.log(value);
-            })
+                });
         })
     })
 };
@@ -58,22 +51,21 @@ const afficherMenu = rl => {
     });
 };
 
-const rechercherCollegueParNom = rl => {
-    rl.question('Quel est le nom du collègue que vous recherchez ? (durand) ', function (nomCollegue) {
+const rechercherCollegueParNom = rl => rl.question(
+    'Quel est le nom du collègue que vous recherchez ? (durand) ', function (nomCollegue) {
 
-        serviceModule.getToutesInfosColleguesAPartirNom(
-            nomCollegue,
-            function (callbackFn) {
-                console.log(callbackFn);
+        serviceModule.getToutesInfosColleguesAPartirNom(nomCollegue)
+            .then(body => {
+                    console.log(body);
+                    afficherMenu(rl);
+                }
+            )
+            .catch(err => {
+                console.log(`${err.statusCode} : erreur dans la recherche des collègues. `);
                 afficherMenu(rl);
-            },
-            function (errorFn) {
-                console.log(errorFn);
-                afficherMenu(rl);
-            }
-        )
-    })
-};
+            })
+    }
+);
 
 const creerCollegue = rl => {
     rl.question('Nom ? ', function (nom) {
@@ -84,26 +76,28 @@ const creerCollegue = rl => {
                         rl.question('Identifiant de connexion ? (> 6 carac) ', function (identifiant) {
                             rl.question('Mot de passe de connexion ? ', function (motDePasse) {
                                 rl.question('Rôle ? (USER) ', function (role) {
-                                    var collegue = {
-                                        nom: nom,
-                                        prenoms: prenoms,
-                                        email: email,
-                                        dateDeNaissance: dateDeNaissance,
-                                        photoUrl: photoUrl,
-                                        identifiant: identifiant,
-                                        motDePasse: motDePasse,
-                                        role: role
-                                    };
-                                    serviceModule.postCreerCollegueReq(collegue,
-                                        function (callbackFn) {
-                                            console.log(callbackFn);
-                                            afficherMenu(rl);
-                                        },
-                                        function (errorFn) {
-                                            console.log(errorFn);
-                                            afficherMenu(rl);
-                                        })
-                                })
+                                        let collegue = {
+                                            nom: nom,
+                                            prenoms: prenoms,
+                                            email: email,
+                                            dateDeNaissance: dateDeNaissance,
+                                            photoUrl: photoUrl,
+                                            identifiant: identifiant,
+                                            motDePasse: motDePasse,
+                                            role: role
+                                        };
+                                        serviceModule.postCreerCollegueReq(collegue)
+                                            .then(body => {
+                                                    console.log(body);
+                                                    afficherMenu(rl);
+                                                }
+                                            )
+                                            .catch(err => {
+                                                console.log(`${err} : échec de la création du collègue`);
+                                                afficherMenu(rl);
+                                            })
+                                    }
+                                )
                             })
                         })
                     })
@@ -114,41 +108,39 @@ const creerCollegue = rl => {
 };
 
 const modifierEmailCollegue = rl => {
-    console.log(">> Modifier email d'un collègue <<")
+    console.log(">> Modifier email d'un collègue <<");
     rl.question('Matricule du collègue ? ', function (matricule) {
         rl.question('Nouvel email ? ', function (email) {
-            serviceModule.patchModifierEmailCollegueReq(
-                matricule,
-                email,
-                function (callbackFn) {
-                    console.log(callbackFn);
+            serviceModule.patchModifierEmailCollegueReq(matricule, email)
+                .then(() => {
+                    console.log(`OK : email modifié.`);
                     afficherMenu(rl);
-                },
-                function (errorFn) {
-                    console.log(errorFn);
+                })
+                .catch(err => {
+                    console.log(`Erreur : email non modifié.\n${err}`);
                     afficherMenu(rl);
-                }
-            )
+                })
         })
     })
 };
 
 const modifierPhotoUrlCollegue = rl => {
-    console.log(">> Modifier url de la photo d'un collègue <<")
+    console.log(">> Modifier url de la photo d'un collègue <<");
     rl.question('Matricule du collègue ? ', function (matricule) {
         rl.question('Nouvel url de la photo ? ', function (photoUrl) {
-            serviceModule.patchModifierPhotoUrlCollegueReq(
-                matricule,
-                photoUrl,
-                function (callbackFn) {
-                    console.log(callbackFn);
+            serviceModule.patchModifierPhotoUrlCollegueReq(matricule, photoUrl)
+                .then(() => {
+                    console.log(`OK : url de la photo modifiée.`);
                     afficherMenu(rl);
-                },
-                function (errorFn) {
-                    console.log(errorFn);
+                })
+                .catch(err => {
+                    console.log(`Erreur : url non modifié.\n${err}`);
                     afficherMenu(rl);
-                }
-            )
+                })
         })
     })
 };
+
+// ***************************** EXPORTS ************************** //
+
+exports.start = start;
