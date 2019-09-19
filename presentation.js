@@ -1,23 +1,26 @@
 // ***************************** EXPORTS/REQUIRES ************************** //
 
-var readline = require('readline');
-var serviceModule = require('./service.js');
+const readline = require('readline');
+const serviceModule = require('./service.js');
 
-exports.startFn = start;
+module.exports = {
+    start: 'start'
+};
 
 // ***************************** FUNCTIONS ************************** //
 
-function start() {
+const start = () => {
+    console.log('** Administration Collègues **');
     console.log("** Authentification pour connexion à collegues-api **");
 
-    var rl = readline.createInterface({
+    let rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
     });
 
     rl.question('Quel est votre identifiant (u1) ? ', function (identifiant) {
         rl.question('Quel est votre mot de passe (pass1) ? ', function (mdp) {
-            serviceModule.postAuthenticateReq(identifiant, mdp, function (statusCode) {
+/*            serviceModule.postAuthenticateReq(identifiant, mdp, function (statusCode) {
                 if (statusCode === 200) {
                     console.log("Authentification réussie");
                     afficherMenu(rl);
@@ -25,12 +28,15 @@ function start() {
                     console.log("Authentification échouée. Aurevoir");
                     rl.close();
                 }
-            });
+            });*/
+            serviceModule.postAuthenticateReq(identifiant, mdp).then((value) => {
+                console.log(value);
+            })
         })
     })
-}
+};
 
-function afficherMenu(rl) {
+const afficherMenu = rl => {
     console.log("1. Rechercher un collègue par nom\n2. Créer un collègue\n3. Modifier email d'un collègue\n4. Modifier url de photo d'un collègue\n99.Sortir");
     rl.question('Quel est votre choix ? ', function (saisie) {
         console.log(`Vous avez saisi : ${saisie}`);
@@ -50,36 +56,11 @@ function afficherMenu(rl) {
             afficherMenu(rl);
         }
     });
-}
+};
 
-function rechercherCollegueParNom(rl) {
+const rechercherCollegueParNom = rl => {
     rl.question('Quel est le nom du collègue que vous recherchez ? (durand) ', function (nomCollegue) {
 
-        // En utilisant deux fonctions de service :
-
-        // serviceModule.getMatriculeSelonNomReq(
-        //     nomCollegue,
-        //     function (callbackFn) {
-        //         console.log(callbackFn);
-        //         callbackFn.forEach(function (matricule) {
-        //             serviceModule.getInfosCollegueSelonMatricule(
-        //                 matricule,
-        //                 function (callbackFn) {
-        //                     console.log(callbackFn);
-        //                     afficherMenu(rl);
-        //                 },
-        //                 function (errorFn) {
-        //                     console.log(errorFn);
-        //                     afficherMenu(rl);
-        //                 })
-        //         })
-        //     },
-        //     function (errorFn) {
-        //         console.log(errorFn);
-        //         afficherMenu(rl);
-        //     })
-
-        // En utilisant une seule fonction de service :
         serviceModule.getToutesInfosColleguesAPartirNom(
             nomCollegue,
             function (callbackFn) {
@@ -92,9 +73,9 @@ function rechercherCollegueParNom(rl) {
             }
         )
     })
-}
+};
 
-function creerCollegue(rl) {
+const creerCollegue = rl => {
     rl.question('Nom ? ', function (nom) {
         rl.question('Prénom(s) ? ', function (prenoms) {
             rl.question('Email ? ', function (email) {
@@ -112,7 +93,7 @@ function creerCollegue(rl) {
                                         identifiant: identifiant,
                                         motDePasse: motDePasse,
                                         role: role
-                                    }
+                                    };
                                     serviceModule.postCreerCollegueReq(collegue,
                                         function (callbackFn) {
                                             console.log(callbackFn);
@@ -130,9 +111,9 @@ function creerCollegue(rl) {
             })
         })
     })
-}
+};
 
-function modifierEmailCollegue(rl) {
+const modifierEmailCollegue = rl => {
     console.log(">> Modifier email d'un collègue <<")
     rl.question('Matricule du collègue ? ', function (matricule) {
         rl.question('Nouvel email ? ', function (email) {
@@ -150,9 +131,9 @@ function modifierEmailCollegue(rl) {
             )
         })
     })
-}
+};
 
-function modifierPhotoUrlCollegue(rl) {
+const modifierPhotoUrlCollegue = rl => {
     console.log(">> Modifier url de la photo d'un collègue <<")
     rl.question('Matricule du collègue ? ', function (matricule) {
         rl.question('Nouvel url de la photo ? ', function (photoUrl) {
@@ -170,4 +151,4 @@ function modifierPhotoUrlCollegue(rl) {
             )
         })
     })
-}
+};

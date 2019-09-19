@@ -1,5 +1,3 @@
-var presentationModule = require('./presentation.js');
+const presentationModule = require('./presentation.js');
 
-console.log('** Administration Collègues **');
-
-presentationModule.startFn();
+presentationModule.start();
