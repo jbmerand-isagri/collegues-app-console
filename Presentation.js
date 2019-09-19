@@ -1,5 +1,7 @@
 const readline = require('readline');
 const serviceModule = require('./Service.js');
+const collegueModule = require('./Collegue.js');
+const Collegue = collegueModule.Collegue;
 const Service = new serviceModule.Service();
 
 class Presentation {
@@ -30,7 +32,7 @@ class Presentation {
 
     afficherMenu(rl) {
         console.log(
-`1. Rechercher un collègue par nom
+            `1. Rechercher un collègue par nom
 2. Créer un collègue
 3. Modifier email d'un collègue
 4. Modifier url de photo d'un collègue
@@ -85,16 +87,8 @@ class Presentation {
                             rl.question('Identifiant de connexion ? (> 6 carac) ', identifiant => {
                                 rl.question('Mot de passe de connexion ? ', motDePasse => {
                                     rl.question('Rôle ? (USER) ', role => {
-                                            let collegue = {
-                                                nom: nom,
-                                                prenoms: prenoms,
-                                                email: email,
-                                                dateDeNaissance: dateDeNaissance,
-                                                photoUrl: photoUrl,
-                                                identifiant: identifiant,
-                                                motDePasse: motDePasse,
-                                                role: role
-                                            };
+                                            let collegue = new Collegue(nom, prenoms, email, dateDeNaissance, photoUrl,
+                                                identifiant, motDePasse, role);
                                             Service.postCreerCollegueReq(collegue)
                                                 .then(body => {
                                                     console.log(body);
