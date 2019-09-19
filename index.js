@@ -1,7 +1,4 @@
-// ***************************** REQUIRES ************************** //
+const presentationModule = require('./Presentation.js');
+const Presentation = new presentationModule.Presentation();
 
-const presentationModule = require('./presentation.js');
-
-// ***************************** PROGRAM ************************** //
-
-presentationModule.start();
+Presentation.start();
