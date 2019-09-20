@@ -2,6 +2,8 @@ import Service from './Service';
 import readline, {Interface} from 'readline';
 import Collegue from './Collegue';
 
+import { parse } from 'date-fns'
+
 /**
  * Classe gérant la présentation de l'IHM.
  */
@@ -10,6 +12,9 @@ export default class Presentation {
     rl: Interface;
     service: Service;
 
+    /**
+     * Constructeur
+     */
     constructor() {
         this.service = new Service();
         this.rl = readline.createInterface({
@@ -119,7 +124,8 @@ export default class Presentation {
         const nom = await this.recupererSaisieUtilisateur('Nom ? ');
         const prenoms = await this.recupererSaisieUtilisateur('Prénom(s) ? ');
         const email = await this.recupererSaisieUtilisateur('Email ? ');
-        const dateDeNaissance = await this.recupererSaisieUtilisateur('Date de naissance ? (1989-11-11) ');
+        const dateDeNaissance = await this.recupererSaisieUtilisateur('Date de naissance ? (24/11/1983) ')
+            .then((dateStr: string) => parse(dateStr, 'dd/MM/yyyy', new Date()));
         const photoUrl = await this.recupererSaisieUtilisateur('Url de sa photo ? (https://...) ');
         const identifiant = await this.recupererSaisieUtilisateur('Identifiant de connexion ? (> 6 carac) ');
         const motDePasse = await this.recupererSaisieUtilisateur('Mot de passe de connexion (opPO09$$lk) ? ');
