@@ -1,15 +1,17 @@
 // ***************************** REQUIRES ************************** //
 
-// création d'une requête avec activation de suivi de Cookies.
-const rp = require('request-promise-native').defaults({
+import r from 'request-promise-native';
+import Collegue from './Collegue';
+
+const rp = r.defaults({
     jar: true
 });
 
 // ***************************** CLASS ************************** //
 
-class Service {
+export default class Service {
 
-    postAuthenticateReq(identifiant, mdp) {
+    postAuthenticateReq(identifiant: string, mdp: string) {
         return rp('https://jbmerand-collegues-api.herokuapp.com/auth',
             {
                 method: 'POST',
@@ -23,7 +25,7 @@ class Service {
         )
     }
 
-    postCreerCollegueReq(collegue) {
+    postCreerCollegueReq(collegue: Collegue) {
         let strCollegue = JSON.stringify(collegue);
         console.log("collegue à créer = " + strCollegue);
         return rp('https://jbmerand-collegues-api.herokuapp.com/collegues',
@@ -44,16 +46,16 @@ class Service {
             }
         )
             .then(response => {
-                if (response.statusCode !== 201) {
-                    return Promise.reject(statusCode => `${response.statusCode} : échec de création du collègue.`)
-                } else {
-                    return response.body;
+                    if (response.statusCode !== 201) {
+                        return Promise.reject(() => `${response.statusCode} : échec de création du collègue.`)
+                    } else {
+                        return response.body;
+                    }
                 }
-            }
-        )
+            )
     }
 
-    patchModifierEmailCollegueReq(matricule, email) {
+    patchModifierEmailCollegueReq(matricule: string, email: string) {
         return rp(`https://jbmerand-collegues-api.herokuapp.com/collegues/${matricule}`,
             {
                 method: 'PATCH',
@@ -65,7 +67,7 @@ class Service {
         )
     }
 
-    patchModifierPhotoUrlCollegueReq(matricule, photoUrl) {
+    patchModifierPhotoUrlCollegueReq(matricule: string, photoUrl: string) {
         return rp(`https://jbmerand-collegues-api.herokuapp.com/collegues/${matricule}`,
             {
                 method: 'PATCH',
@@ -77,7 +79,7 @@ class Service {
         )
     }
 
-    getToutesInfosColleguesAPartirNom(nom) {
+    getToutesInfosColleguesAPartirNom(nom: string) {
         return rp(
             `https://jbmerand-collegues-api.herokuapp.com/collegues?nom=${nom}`,
             {
@@ -85,7 +87,7 @@ class Service {
             }
         )
             .then(tabMatricule => tabMatricule.map(
-                matricule => rp(`https://jbmerand-collegues-api.herokuapp.com/collegues/${matricule}`, {
+                (matricule: string) => rp(`https://jbmerand-collegues-api.herokuapp.com/collegues/${matricule}`, {
                         json: true
                     }
                 )
@@ -93,7 +95,3 @@ class Service {
             .then(tabDonnees$ => Promise.all(tabDonnees$));
     }
 }
-
-// ***************************** EXPORTS ************************** //
-
-exports.Service = Service;

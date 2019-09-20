@@ -1,8 +1,10 @@
-const readline = require('readline');
-const serviceModule = require('./Service.js');
-const Service = new serviceModule.Service();
+import Service from './Service';
+import readline, {Interface} from 'readline';
+import Collegue from './Collegue';
 
-class Presentation {
+const service = new Service();
+
+export default class Presentation {
 
     start() {
         const rl = readline.createInterface({
@@ -15,7 +17,7 @@ class Presentation {
 
         rl.question(`Quel est votre identifiant (u1) ? `, identifiant => {
             rl.question(`Quel est votre mot de passe (pass1) ? `, mdp => {
-                Service.postAuthenticateReq(identifiant, mdp)
+                service.postAuthenticateReq(identifiant, mdp)
                     .then(response => {
                         console.log(`${response.statusCode} : authentification réussie.`);
                         this.afficherMenu(rl);
@@ -28,7 +30,7 @@ class Presentation {
         })
     }
 
-    afficherMenu(rl) {
+    afficherMenu(rl: Interface) {
         console.log(
 `1. Rechercher un collègue par nom
 2. Créer un collègue
@@ -38,7 +40,7 @@ class Presentation {
         );
         rl.question(
             `Quel est votre choix ? `,
-            saisie => {
+            (saisie:string) => {
                 console.log(`Vous avez saisi : ${saisie}`);
                 if (saisie && saisie === '1') {
                     this.rechercherCollegueParNom(rl);
@@ -59,11 +61,11 @@ class Presentation {
         );
     }
 
-    rechercherCollegueParNom(rl) {
+    rechercherCollegueParNom(rl: Interface) {
         rl.question(
             `Quel est le nom du collègue que vous recherchez ? (durand) `,
-            nomCollegue => {
-                Service.getToutesInfosColleguesAPartirNom(nomCollegue)
+            (nomCollegue:string) => {
+                service.getToutesInfosColleguesAPartirNom(nomCollegue)
                     .then(body => {
                         console.log(body);
                         this.afficherMenu(rl);
@@ -76,26 +78,18 @@ class Presentation {
         )
     }
 
-    creerCollegue(rl) {
-        rl.question('Nom ? ', nom => {
-            rl.question('Prénom(s) ? ', prenoms => {
-                rl.question('Email ? ', email => {
-                    rl.question('Date de naissance ? (1989-11-11) ', dateDeNaissance => {
-                        rl.question('Url de sa photo ? (https://...) ', photoUrl => {
-                            rl.question('Identifiant de connexion ? (> 6 carac) ', identifiant => {
-                                rl.question('Mot de passe de connexion ? ', motDePasse => {
-                                    rl.question('Rôle ? (USER) ', role => {
-                                            let collegue = {
-                                                nom: nom,
-                                                prenoms: prenoms,
-                                                email: email,
-                                                dateDeNaissance: dateDeNaissance,
-                                                photoUrl: photoUrl,
-                                                identifiant: identifiant,
-                                                motDePasse: motDePasse,
-                                                role: role
-                                            };
-                                            Service.postCreerCollegueReq(collegue)
+    creerCollegue(rl: Interface) {
+        rl.question('Nom ? ', (nom:string) => {
+            rl.question('Prénom(s) ? ', (prenoms:string) => {
+                rl.question('Email ? ', (email:string) => {
+                    rl.question('Date de naissance ? (1989-11-11) ', (dateDeNaissance:string) => {
+                        rl.question('Url de sa photo ? (https://...) ', (photoUrl:string) => {
+                            rl.question('Identifiant de connexion ? (> 6 carac) ', (identifiant:string) => {
+                                rl.question('Mot de passe de connexion ? ', (motDePasse:string) => {
+                                    rl.question('Rôle ? (USER) ', (role:string) => {
+                                            let collegue = new Collegue(nom, prenoms, email, dateDeNaissance, photoUrl,
+                                                identifiant, motDePasse, role);
+                                            service.postCreerCollegueReq(collegue)
                                                 .then(body => {
                                                     console.log(body);
                                                     this.afficherMenu(rl);
@@ -115,11 +109,11 @@ class Presentation {
         })
     }
 
-    modifierEmailCollegue(rl) {
+    modifierEmailCollegue(rl: Interface) {
         console.log(">> Modifier email d'un collègue <<");
-        rl.question('Matricule du collègue ? ', matricule => {
-            rl.question('Nouvel email ? ', email => {
-                Service.patchModifierEmailCollegueReq(matricule, email)
+        rl.question('Matricule du collègue ? ', (matricule: string) => {
+            rl.question('Nouvel email ? ', (email: string) => {
+                service.patchModifierEmailCollegueReq(matricule, email)
                     .then(() => {
                         console.log(`OK : email modifié.`);
                         this.afficherMenu(rl);
@@ -132,11 +126,11 @@ class Presentation {
         })
     }
 
-    modifierPhotoUrlCollegue(rl) {
+    modifierPhotoUrlCollegue(rl: Interface) {
         console.log(">> Modifier url de la photo d'un collègue <<");
-        rl.question('Matricule du collègue ? ', matricule => {
-            rl.question('Nouvel url de la photo ? ', photoUrl => {
-                Service.patchModifierPhotoUrlCollegueReq(matricule, photoUrl)
+        rl.question('Matricule du collègue ? ', (matricule: string) => {
+            rl.question('Nouvel url de la photo ? ', (photoUrl: string) => {
+                service.patchModifierPhotoUrlCollegueReq(matricule, photoUrl)
                     .then(() => {
                         console.log(`OK : url de la photo modifiée.`);
                         this.afficherMenu(rl);
@@ -150,6 +144,3 @@ class Presentation {
     }
 }
 
-// ***************************** EXPORTS ************************** //
-
-exports.Presentation = Presentation;
