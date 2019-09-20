@@ -3,7 +3,9 @@
  */
 export default class Collegue {
 
-    constructor(private _nom: string, private _prenoms: string, private _email:string, private _dateDeNaissance: string, private _photoUrl: string, private _identifiant: string, private _motDePasse: string, private _role: string) {
+    constructor(private _nom: string, private _prenoms: string, private _email: string,
+                private _dateDeNaissance: string, private _photoUrl: string, private _identifiant: string,
+                private _motDePasse: string, private _role: string) {
     }
 
     get nom(): string {
@@ -70,7 +72,7 @@ export default class Collegue {
         this._role = value;
     }
 
-    toString() {
+    toString(): String {
         return `Informations du collegue: ${this._nom}, ${this._prenoms}, ${this._email}, ${this._dateDeNaissance}, 
         ${this._photoUrl}, ${this._identifiant}, ${this._motDePasse}, ${this._role}`
     }
